@@ -1,6 +1,8 @@
 
 preparation：安装docker并配置好加速器
 
+安装过程
+----
 1.
 >docker run \  
 >--publish 443:443 --publish 10080:80 --publish 2222:22 \
@@ -38,66 +40,72 @@ preparation：安装docker并配置好加速器
 
 
 
-注意事项：
-       1. gitlab runner 注册时要加命令参数 
-               --run-untagged = "true"
-               --locked = "false"
-           否则会出现Jobs stuck问题，没有runner来执行yml文件
-       2. 启动gitlab runner时，通过sudo提升gitlab-runner用户权限，虽然可以创建config文件，但无法创建数据文件
-               sudo docker run  -d -v /srv/gitlab-runner/config:/etc/gitlab-runner -v /srv/gitlab-runner/home:/home/gitlab-runner 
-                        --restart always --name gitlab-runner gitlab/gitlab-runner:latest
-           解决方法：默认是root用户
-       3. 启动gitlab-runner+debug模式
-               docker run  -d -v /srv/gitlab-runner/config:/etc/gitlab-runner -v /srv/gitlab-runner/home:/home/gitlab-runner 
-               --restart always    -e DEBUG=true    --name gitlab-runner gitlab/gitlab-runner:latest  
-               run --user=root   --working-directory=/home/gitlab-runner
-       4.  启动gitlab-runner，executor为shell
-       5.  每次注册新的runner之前，要把之前废掉的runner的注册信息删掉
-                  注册信息所在位置：/srv/gitlab-runner/config/config.toml
-       6. 如果要重新启动一个gitlab容器，应该先前把挂载出的目录清理干净，否则会出现读取数据库错误
-       7. 若在注册gitlab runner时出现URL错误
-              a. 关闭防火墙
-                    systemctl status firewalld
-                    systemctl stop firewalld
-                    systemctl disable firewalled
-              b. 关闭SELinux
-                    临时关闭：setenforce 0
-                    修改配置文件： /etc/selinux/config文件  将SELINUX=enforcing 改为 SELINUX=disabled
+注意事项
+----
+>1. gitlab runner 注册时要加命令参数 <br>
+>>--run-untagged = "true"<br>
+>>--locked = "false"<br>
+>>否则会出现Jobs stuck问题，没有runner来执行yml文件<br>
+>2. 启动gitlab runner时，通过sudo提升gitlab-runner用户权限，虽然可以创建config文件，但无法创建数据文件<br>
+>>sudo docker run  -d -v /srv/gitlab-runner/config:/etc/gitlab-runner -v /srv/gitlab-runner/home:/home/gitlab-runner <br>
+>>--restart always --name gitlab-runner gitlab/gitlab-runner:latest<br>
+>>解决方法：默认是root用户
+>3. 启动gitlab-runner+debug模式
+>>docker run  -d -v /srv/gitlab-runner/config:/etc/gitlab-runner -v /srv/gitlab-runner/home:/home/gitlab-runner 
+>>--restart always    -e DEBUG=true    --name gitlab-runner gitlab/gitlab-runner:latest  
+>>run --user=root   --working-directory=/home/gitlab-runner
+>4.  启动gitlab-runner，executor为shell<br>
+>5.  每次注册新的runner之前，要把之前废掉的runner的注册信息删掉
+>>注册信息所在位置：/srv/gitlab-runner/config/config.toml
+>6. 如果要重新启动一个gitlab容器，应该先前把挂载出的目录清理干净，否则会出现读取数据库错误<br>
+>7. 若在注册gitlab runner时出现URL错误
+>>a.关闭防火墙
+>>>systemctl status firewalld
+>>>systemctl stop firewalld
+>>>systemctl disable firewalled
+>>b. 关闭SELinux
+>>>临时关闭：setenforce 0
+>>>修改配置文件： /etc/selinux/config文件  将SELINUX=enforcing 改为 SELINUX=disabled
        
              
 补充(测试过程)：
-      1. git上传文件
-           git init
-           git clone http://10.10.26.85:10080/root/test.git
-           git add .
-           git commit -m "update yml"
-           git push
-      2. yml文件 -- .gitlab-ci.yml
-           stages:
-              - build
-              - test
-           job1:
-              stage: test
-              script: 
-                 - echo "I am job1"
-                 - echo "I am in testing stage"
-           job2:
-              stage: build
-              script:
-                 - echo "I am job2"
-                 - echo " I am in building stage"
+----
+>1. git上传文件
+>>git init
+>>git clone http://10.10.26.85:10080/root/test.git
+>>git add .
+>>git commit -m "update yml"
+>>git push
+>2. yml文件 -- .gitlab-ci.yml<br>
+>>stages:<br>
+>>>\-build<br>
+>>>\-test<br>
+
+>>job1:<br>
+>>>stage: test<br>
+>>>script: <br>
+>>>>\- echo "I am job1"<br>
+>>>>\- echo "I am in testing stage"<br>
+
+>>job2:<br>
+>>>stage: build<br>
+>>>script:<br>
+>>>>\- echo "I am job2"<br>
+>>>>\- echo " I am in building stage"<br>
+
 
 杂记：
-    1. 镜像打包
-         docker save -o 镜像名称.tar 指定镜像:标签
-           或 docker save 镜像ID < 镜像名称.tar
-    2. 镜像解压
-         docker load < 镜像名称.tar
-         docker tag 镜像ID 镜像名称:标签
-    3. docker内安装ping:
-         a. apt-get update
-         b. apt-get install iputils-ping
-    4. 进入运行中的容器
-         docker exec -it 镜像名称 bash
-    5. 查看容器的运行日志
-         docker logs 容器名称 > log
+----
+>1. 镜像打包
+>>docker save -o 镜像名称.tar 指定镜像:标签
+>>或 docker save 镜像ID < 镜像名称.tar
+>2. 镜像解压
+>>docker load < 镜像名称.tar
+>>docker tag 镜像ID 镜像名称:标签
+>3. docker内安装ping:
+>>a. apt-get update
+>>b. apt-get install iputils-ping
+>4. 进入运行中的容器
+>>docker exec -it 镜像名称 bash
+>5. 查看容器的运行日志
+>>docker logs 容器名称 > log
