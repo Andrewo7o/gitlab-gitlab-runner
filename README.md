@@ -13,14 +13,15 @@ docker run \
        gitlab/gitlab-ce:latest
        
 三类端口映射：           
-             端口：22   服务：SSH     说明：SSH通过在网络中建立安全隧道来实现SSH客户端与服务器之间的连接            
-             端口：80   服务：HTTP    说明：用于网页浏览            
-             端口：443  服务：Https   说明：网页浏览端口，能提供加密和通过安全端口传输的另一种HTTP
+端口：22   服务：SSH     说明：SSH通过在网络中建立安全隧道来实现SSH客户端与服务器之间的连接            
+端口：80   服务：HTTP    说明：用于网页浏览            
+端口：443  服务：Https   说明：网页浏览端口，能提供加密和通过安全端口传输的另一种HTTP
 
 三个挂载目录：
-             /etc/gitlab           
-             /var/log/gitlab            
-             /var/opt/gitlab
+
+/etc/gitlab           
+/var/log/gitlab            
+/var/opt/gitlab
 
 2.
 在gitlab上创建项目时，生成项目的URL访问地址是按容器的hostname来生成的，即容器的id
