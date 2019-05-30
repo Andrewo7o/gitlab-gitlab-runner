@@ -2,14 +2,14 @@
 preparation：安装docker并配置好加速器
 
 1.
-docker run \  
-       --publish 443:443 --publish 10080:80 --publish 2222:22 \
-       --name gitlab \
-       --restart always \
-       --volume /srv/gitlab/config: /etc/gitlab \    
-       --volume /srv/gitlab/logs: /var/log/gitlab \    
-       --volume /srv/gitlab/data: /var/opt/gitlab \    
-       gitlab/gitlab-ce:latest
+>docker run \  
+>--publish 443:443 --publish 10080:80 --publish 2222:22 \
+>--name gitlab \
+>--restart always \
+>--volume /srv/gitlab/config: /etc/gitlab \    
+>--volume /srv/gitlab/logs: /var/log/gitlab \    
+>--volume /srv/gitlab/data: /var/opt/gitlab \    
+>gitlab/gitlab-ce:latest
 
 三类端口映射：
              端口：22   服务：SSH     说明：SSH通过在网络中建立安全隧道来实现SSH客户端与服务器之间的连接
