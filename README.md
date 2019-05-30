@@ -11,30 +11,30 @@ preparation：安装docker并配置好加速器
 >--volume /srv/gitlab/data: /var/opt/gitlab \    
 >gitlab/gitlab-ce:latest
 
-三类端口映射：
-             端口：22   服务：SSH     说明：SSH通过在网络中建立安全隧道来实现SSH客户端与服务器之间的连接
-             端口：80   服务：HTTP    说明：用于网页浏览
-             端口：443  服务：Https   说明：网页浏览端口，能提供加密和通过安全端口传输的另一种HTTP
+>三类端口映射：<br>
+>>端口：22   服务：SSH     说明：SSH通过在网络中建立安全隧道来实现SSH客户端与服务器之间的连接<br>
+>>端口：80   服务：HTTP    说明：用于网页浏览<br>
+>>端口：443  服务：Https   说明：网页浏览端口，能提供加密和通过安全端口传输的另一种HTTP<br>
 
-三个挂载目录：
-             /etc/gitlab
-             /var/log/gitlab
-             /var/opt/gitlab
+>三个挂载目录：<br>
+>>/etc/gitlab<br>
+>>/var/log/gitlab<br>
+>>/var/opt/gitlab<br>
 
 2.
-在gitlab上创建项目时，生成项目的URL访问地址是按容器的hostname来生成的，即容器的id
-   进入容器内   vim /etc/gitlab/gitlab.rb
-      a.external_url "宿主机IP+映射端口"
-      b.#nginx配置   nginx["listen_port"] = "80"
+>在gitlab上创建项目时，生成项目的URL访问地址是按容器的hostname来生成的，即容器的id
+>>进入容器内   vim /etc/gitlab/gitlab.rb
+>>>a.external_url "宿主机IP+映射端口"
+>>>b.#nginx配置   nginx["listen_port"] = "80"
 3.
-启动gitlab-runner，默认root用户
-      docker run  -d -v /srv/gitlab-runner/config:/etc/gitlab-runner -v /srv/gitlab-runner/home:/home/gitlab-runner 
-      --restart always --name gitlab-runner gitlab/gitlab-runner:latest 
-      run --user=root --working-directory=/home/gitlab-runner
+>启动gitlab-runner，默认root用户
+>>docker run  -d -v /srv/gitlab-runner/config:/etc/gitlab-runner -v /srv/gitlab-runner/home:/home/gitlab-runner 
+>>--restart always --name gitlab-runner gitlab/gitlab-runner:latest 
+>>run --user=root --working-directory=/home/gitlab-runner
 
 4.
-注册gitlab runner，executor为shell
-      docker exec -it gitlab-runner gitlab-runner register --run-untagged="true"  --locked="false"
+>注册gitlab runner，executor为shell
+>>docker exec -it gitlab-runner gitlab-runner register --run-untagged="true"  --locked="false"
 
 
 
