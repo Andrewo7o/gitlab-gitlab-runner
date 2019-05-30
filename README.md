@@ -2,7 +2,6 @@
 Process of Installing gitlab and gitlab-runner
 
 preparation：安装docker并配置好加速器
-
 1.
 docker run \
     --publish 443:443 --publish 10080:80 --publish 2222:22 \
